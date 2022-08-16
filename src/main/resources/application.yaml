@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: webflux-demo
+
+  r2dbc:
+    #url: r2dbc:h2:mem:///webfluxdb
+    url: r2dbc:h2:file:///c:/jts/IdeaProjects/webflux/h2/webfluxdb
+    #username: sa
+    #password:
