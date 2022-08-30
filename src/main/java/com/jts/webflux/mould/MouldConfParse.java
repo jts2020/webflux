@@ -57,7 +57,7 @@ public class MouldConfParse {
     public boolean exists(Node node, String key) {
         return Optional.ofNullable(node)
                 .map(n -> n.get(key))
-                .map(Objects::nonNull)
+                .map(obj -> Boolean.TRUE)
                 .orElse(Boolean.FALSE);
     }
 
