@@ -2,6 +2,8 @@ package com.jts.webflux.handle;
 
 import com.jts.webflux.bo.Person;
 import com.jts.webflux.dao.PersonDao;
+import com.jts.webflux.mould.MouldConfParse;
+import com.jts.webflux.mould.NodeConf;
 import org.springframework.http.MediaType;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
@@ -21,15 +23,18 @@ public class PersonHandler {
 
     private final PersonDao personDao;
 
-    public PersonHandler(DatabaseClient client, PersonDao personDao) {
+    private final MouldConfParse mouldConfParse;
+
+    public PersonHandler(DatabaseClient client, PersonDao personDao, MouldConfParse mouldConfParse) {
         this.client = client;
         this.personDao = personDao;
+        this.mouldConfParse = mouldConfParse;
     }
 
     public Mono<ServerResponse> helloPerson(ServerRequest request) {
         return ServerResponse.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(BodyInserters.fromValue("Hello Person!"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(mouldConfParse.exec());
     }
 
     public Mono<ServerResponse> webClient(ServerRequest request) {

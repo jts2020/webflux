@@ -1,0 +1,38 @@
+{
+  "id": "w484",
+  "name": "w484",
+  "dataHeader": {
+    "head1": {
+      "type": "string",
+      "defaultVal": "1"
+    }
+  },
+  "dataBody": {
+    "id": {
+      "type": "string",
+      "defaultVal": "1"
+    },
+    "name": {
+      "type": "string",
+      "defaultVal": "1"
+    },
+    "age": {
+      "type": "string",
+      "defaultVal": "1"
+    },
+    "score": {
+      "type": "bigDecimal",
+      "defaultVal": "1"
+    },
+    "course": {
+      "type": "obj",
+      "body": {
+        "bb": {
+          "name": "bb",
+          "type": "string",
+          "defaultVal": "1"
+        }
+      }
+    }
+  }
+}
