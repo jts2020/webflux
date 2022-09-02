@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Log4j2
@@ -39,25 +40,47 @@ public class MouldConfParse {
                 .map(SoftReference::get)
                 .orElseGet(() -> {
                     NodeConf cfg = parseNodeConf();
-                    SoftReference nsr = new SoftReference<>(cfg);
-                    CACHE_NODE_CFG_MAP.put(id, nsr);
-                    log.info("CACHE_NODE_CFG_MAP put id [{}]", id);
-                    return cfg;
+                    if (Objects.nonNull(cfg)) {
+                        SoftReference<NodeConf> nsr = new SoftReference<>(cfg);
+                        CACHE_NODE_CFG_MAP.put(id, nsr);
+                        log.info("CACHE_NODE_CFG_MAP put id [{}]", id);
+                        return cfg;
+                    }
+                    log.warn("NodeConf is null.id [{}]", id);
+                    return null;
                 });
         Node body = getDataBody(nodeConf);
-        log.info("id [{}]", exists(body, "id"));
         return nodeConf;
     }
 
     public Node getDataBody(NodeConf nodeConf) {
-        return nodeConf.getDataBody();
+        return Optional.ofNullable(nodeConf)
+                .map(NodeConf::getDataBody)
+                .orElse(Node.EMPTY);
     }
 
-    public boolean exists(Node node, String key) {
-        return Optional.ofNullable(node)
+    public Node getNode(String id, String path) {
+        NodeConf root = getNodeConf(id);
+        Node dataBodyNode = getDataBody(root);
+        if (Objects.nonNull(path)) {
+            String[] paths = path.split("/", -1);
+            Node node = dataBodyNode;
+            for (String pth : paths) {
+                node = getChildNode(node, pth);
+            }
+            return node;
+        }
+        return dataBodyNode;
+    }
+
+    private Node getChildNode(Node node, String key) {
+        Node res = Optional.ofNullable(node)
                 .map(n -> n.get(key))
-                .map(obj -> Boolean.TRUE)
-                .orElse(Boolean.FALSE);
+                .filter(attr -> Objects.equals(Attribute.ARRAY_TYPE, attr.getType()))
+                .map(Attribute::getBody)
+                .orElse(node);
+        log.info("Get key[{}] getBodyNpde {}", key, node);
+        return res;
     }
 
 }

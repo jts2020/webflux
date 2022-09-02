@@ -7,14 +7,17 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Attribute {
-    private String name;
+
+    public static final String STRING_TYPE = "string";
+    public static final String BIG_DECIMAL_TYPE = "bigDecimal";
+    public static final String ARRAY_TYPE = "array";
+
     private Long order;
-    private String type;
+    private String type = STRING_TYPE;
+    private String alias;
     private String defaultVal;
     private String desc;
-    private Map<String, Attribute> body;
+    private Node body;
     private Map<String, Object> attr;
 }

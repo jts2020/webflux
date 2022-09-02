@@ -28,7 +28,6 @@
       "type": "obj",
       "body": {
         "bb": {
-          "name": "bb",
           "type": "string",
           "defaultVal": "1"
         }
