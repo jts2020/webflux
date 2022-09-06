@@ -56,7 +56,7 @@ public class MouldConfParse {
     public Node getDataBody(NodeConf nodeConf) {
         return Optional.ofNullable(nodeConf)
                 .map(NodeConf::getDataBody)
-                .orElse(Node.EMPTY);
+                .orElse(null);
     }
 
     public Node getNode(String id, String path) {
@@ -66,6 +66,9 @@ public class MouldConfParse {
             String[] paths = path.split("/", -1);
             Node node = dataBodyNode;
             for (String pth : paths) {
+                if (Objects.isNull(node)) {
+                    return null;
+                }
                 node = getChildNode(node, pth);
             }
             return node;
@@ -78,7 +81,7 @@ public class MouldConfParse {
                 .map(n -> n.get(key))
                 .filter(attr -> Objects.equals(Attribute.ARRAY_TYPE, attr.getType()))
                 .map(Attribute::getBody)
-                .orElse(node);
+                .orElse(null);
         log.info("Get key[{}] getBodyNpde {}", key, node);
         return res;
     }
