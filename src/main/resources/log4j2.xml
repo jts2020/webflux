@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+
+    <Properties>
+        <Property name="logPattern">%d{HH:mm:ss.SSS}|%t|%-5level|%logger{36}|- %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}"/>
+        </Console>
+
+        <Routing name="ReqLogAppender">
+            <Routes pattern="$${ctx:REQ-ID}">
+                <Route key="$${ctx:REQ-ID}">
+                    <RollingRandomAccessFile name="reqLogAppender-app"
+                                             fileName="appLog/${date:yyyy-MM-dd}/Req-app/Req-app.log"
+                                             bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
+                                             filePattern="appLog/${date:yyyy-MM-dd}/Req-app/Req-app-%d{yyyy-MM-dd}-%i.log.gz">
+                        <DynamicThresholdFilter key="REQ-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
+                                                onMismatch="DENY">
+                            <keyValuePair key="DEBUG" value="DEBUG"/>
+                            <keyValuePair key="INFO" value="INFO"/>
+                            <keyValuePair key="ERROR" value="ERROR"/>
+                        </DynamicThresholdFilter>
+                        <PatternLayout pattern="${logPattern}"/>
+                        <Policies>
+                            <TimeBasedTriggeringPolicy interval="24"/>
+                            <SizeBasedTriggeringPolicy size="200MB"/>
+                        </Policies>
+                        <DefaultRolloverStrategy max="100"/>
+                    </RollingRandomAccessFile>
+                </Route>
+
+                <Route>
+                    <RollingRandomAccessFile name="reqLogAppender-${ctx:REQ-ID}"
+                                             fileName="appLog/${date:yyyy-MM-dd}/Req${ctx:REQ-ID}/Req${ctx:REQ-ID}.log"
+                                             bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
+                                             filePattern="appLog/${date:yyyy-MM-dd}/Req${ctx:REQ-ID}/Req${ctx:REQ-ID}-%d{yyyy-MM-dd}-%i.log.gz">
+                        <DynamicThresholdFilter key="REQ-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
+                                                onMismatch="DENY">
+                            <keyValuePair key="DEBUG" value="DEBUG"/>
+                            <keyValuePair key="INFO" value="INFO"/>
+                            <keyValuePair key="ERROR" value="ERROR"/>
+                        </DynamicThresholdFilter>
+                        <PatternLayout pattern="${logPattern}"/>
+                        <Policies>
+                            <TimeBasedTriggeringPolicy interval="24"/>
+                            <SizeBasedTriggeringPolicy size="200MB"/>
+                        </Policies>
+                        <DefaultRolloverStrategy max="100"/>
+                    </RollingRandomAccessFile>
+                </Route>
+            </Routes>
+        </Routing>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ReqLogAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>
