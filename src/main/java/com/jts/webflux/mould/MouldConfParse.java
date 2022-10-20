@@ -82,7 +82,7 @@ public class MouldConfParse {
                 .filter(attr -> Objects.equals(Attribute.ARRAY_TYPE, attr.getType()))
                 .map(Attribute::getBody)
                 .orElse(null);
-        log.info("Get key[{}] getBodyNpde {}", key, node);
+        log.info("Get key[{}] getBodyNode {}", key, node);
         return res;
     }
 
