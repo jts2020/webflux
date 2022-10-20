@@ -3,6 +3,8 @@
 
     <Properties>
         <Property name="logPattern">%d{HH:mm:ss.SSS}|%t|%-5level|%logger{36}|- %msg%n</Property>
+        <Property name="appFilePath">appLog/${date:yyyy-MM-dd}/Req-app</Property>
+        <Property name="reqFilePath">appLog/${date:yyyy-MM-dd}/Req${ctx:REQ-ID}</Property>
     </Properties>
 
     <Appenders>
@@ -11,13 +13,13 @@
         </Console>
 
         <Routing name="ReqLogAppender">
-            <Routes pattern="$${ctx:REQ-ID}">
-                <Route key="$${ctx:REQ-ID}">
+            <Routes pattern="$${ctx:REQ-LOG-ID}">
+                <Route key="$${ctx:REQ-LOG-ID}">
                     <RollingRandomAccessFile name="reqLogAppender-app"
-                                             fileName="appLog/${date:yyyy-MM-dd}/Req-app/Req-app.log"
+                                             fileName="${appFilePath}/Req-app.log"
                                              bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
-                                             filePattern="appLog/${date:yyyy-MM-dd}/Req-app/Req-app-%d{yyyy-MM-dd}-%i.log.gz">
-                        <DynamicThresholdFilter key="REQ-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
+                                             filePattern="${appFilePath}/Req-app-%d{yyyy-MM-dd}-%i.log.gz">
+                        <DynamicThresholdFilter key="REQ-LOG-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
                                                 onMismatch="DENY">
                             <keyValuePair key="DEBUG" value="DEBUG"/>
                             <keyValuePair key="INFO" value="INFO"/>
@@ -33,10 +35,10 @@
                 </Route>
 
                 <Route>
-                    <RollingRandomAccessFile name="reqLogAppender-${ctx:REQ-ID}"
-                                             fileName="appLog/${date:yyyy-MM-dd}/Req${ctx:REQ-ID}/Req${ctx:REQ-ID}.log"
+                    <RollingRandomAccessFile name="reqLogAppender-${ctx:REQ-LOG-ID}"
+                                             fileName="${reqFilePath}/Req${ctx:REQ-LOG-ID}.log"
                                              bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
-                                             filePattern="appLog/${date:yyyy-MM-dd}/Req${ctx:REQ-ID}/Req${ctx:REQ-ID}-%d{yyyy-MM-dd}-%i.log.gz">
+                                             filePattern="${reqFilePath}/Req${ctx:REQ-LOG-ID}-%d{yyyy-MM-dd}-%i.log.gz">
                         <DynamicThresholdFilter key="REQ-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
                                                 onMismatch="DENY">
                             <keyValuePair key="DEBUG" value="DEBUG"/>

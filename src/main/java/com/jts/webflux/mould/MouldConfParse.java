@@ -8,10 +8,10 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Log4j2
 @Component
@@ -19,7 +19,7 @@ public class MouldConfParse {
 
     private static final ObjectMapper OBJ_MAPPER = new ObjectMapper();
 
-    private static final Map<String, SoftReference<NodeConf>> CACHE_NODE_CFG_MAP = new HashMap<>();
+    private static final Map<String, SoftReference<NodeConf>> CACHE_NODE_CFG_MAP = new ConcurrentHashMap<>();
 
     public NodeConf exec() {
         return getNodeConf("w484");

@@ -11,11 +11,15 @@ import reactor.core.publisher.Mono;
 @Log4j2
 @Component
 public class Log4j2Filter implements WebFilter {
+
+    private static final String REQ_ID = "REQ-LOG-ID";
+    private static final String REQ_LOG_LEVEL = "REQ-LOG-LEVEL";
+
     @Override
     public Mono<Void> filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) {
         String reqId = serverWebExchange.getRequest().getPath().value().replaceAll("/", "-");
-        ThreadContext.put("REQ-ID", reqId);
-        ThreadContext.put("REQ-LEVEL", "INFO");
+        ThreadContext.put(REQ_ID, reqId);
+        ThreadContext.put(REQ_LOG_LEVEL, "INFO");
         return webFilterChain.filter(serverWebExchange)
                 .doFinally(signalType -> ThreadContext.clearAll());
     }
