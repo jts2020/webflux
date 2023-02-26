@@ -19,12 +19,7 @@
                                              fileName="${appFilePath}/Req-app.log"
                                              bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
                                              filePattern="${appFilePath}/Req-app-%d{yyyy-MM-dd}-%i.log.gz">
-                        <DynamicThresholdFilter key="REQ-LOG-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
-                                                onMismatch="DENY">
-                            <keyValuePair key="DEBUG" value="DEBUG"/>
-                            <keyValuePair key="INFO" value="INFO"/>
-                            <keyValuePair key="ERROR" value="ERROR"/>
-                        </DynamicThresholdFilter>
+                        <ThresholdFilter level="info" nMatch="ACCEPT" onMismatch="DENY"/>
                         <PatternLayout pattern="${logPattern}"/>
                         <Policies>
                             <TimeBasedTriggeringPolicy interval="24"/>
@@ -35,11 +30,11 @@
                 </Route>
 
                 <Route>
-                    <RollingRandomAccessFile name="reqLogAppender-${ctx:REQ-LOG-ID}"
+                    <RollingRandomAccessFile name="reqLogAppender-$${ctx:REQ-LOG-ID}"
                                              fileName="${reqFilePath}/Req${ctx:REQ-LOG-ID}.log"
                                              bufferedIO="true" bufferSize="8192" immediateFlush="true" append="true"
                                              filePattern="${reqFilePath}/Req${ctx:REQ-LOG-ID}-%d{yyyy-MM-dd}-%i.log.gz">
-                        <DynamicThresholdFilter key="REQ-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
+                        <DynamicThresholdFilter key="REQ-LOG-LEVEL" defaultThreshold="INFO" onMatch="ACCEPT"
                                                 onMismatch="DENY">
                             <keyValuePair key="DEBUG" value="DEBUG"/>
                             <keyValuePair key="INFO" value="INFO"/>
